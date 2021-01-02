@@ -1,12 +1,16 @@
-$TodaysDate = Get-Date -Format "yyyy/MM/dd"
-$TodaysGames = (Invoke-RestMethod -UseBasicParsing -Uri "https://www.balldontlie.io/api/v1/games?dates[]=$TodaysDate").data | Select-Object home_team,visitor_team
+$headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
+$headers.Add("if-none-match", "`"802af375f65c2e0e9b80df0a448dadfe`"")
+$TodaysGames = (Invoke-RestMethod 'https://cdn.nba.com/static/json/liveData/scoreboard/todaysScoreboard_00.json' -Method 'GET' -Headers $headers).scoreboard.games
 
-foreach ($Game in $TodaysGames) {
-    $HomeTeam = New-Object -TypeName "System.Collections.ArrayList"
-    $AwayTeam = New-Object -TypeName "System.Collections.ArrayList"
-    
+$BasketBallDataPoints = foreach ($Game in $TodaysGames) {
     [pscustomobject]@{
-        HomeTeam = $Game.home_team.full_name
-        AwayTean = $Game.visitor_team.full_name
+        'Home Team' = $Game.hometeam.teamname
+        'HomeWins' = $Game.hometeam.wins 
+        'HomeLosses' = $Game.hometeam.losses
+        'Away Team' = $Game.awayteam.teamname
+        'AwayWins' = $Game.awayteam.wins
+        'AwayLosses' = $Game.awayteam.losses
     }
 }
+
+$BasketBallDataPoints | Sort-Object HomeWins -Descending | Format-Table 
