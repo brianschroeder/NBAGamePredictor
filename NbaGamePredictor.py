@@ -35,6 +35,12 @@ def GameAnalysis():
         awayTeam = (matchup.split(':')[1]).replace('LA', 'Los Angeles')
         homeGamesPlayed = (TeamStats(homeTeam))['games_played'][0]
         awayGamesPlayed = (TeamStats(awayTeam))['games_played'][0]
+
+        if ((TeamStats(homeTeam))['points'][0])/homeGamesPlayed > ((TeamStats(homeTeam))['opp_points'][0])/homeGamesPlayed:
+            homeAdvantage += 4
+        
+        if ((TeamStats(awayTeam))['points'][0])/awayGamesPlayed > ((TeamStats(awayTeam))['opp_points'][0])/awayGamesPlayed:
+            awayAdvantage += 4
         
         if ((TeamStats(homeTeam))['assists'][0])/homeGamesPlayed > ((TeamStats(awayTeam))['assists'][0])/awayGamesPlayed:
             homeAdvantage += 1
@@ -91,6 +97,7 @@ def GameAnalysis():
         all_stats.append(stats)
     
     stats_dataframe = pd.DataFrame(data = all_stats)
-    stats_dataframe.to_html('nbagamepredictor.html')
+    stats_dataframe_sorted = stats_dataframe.sort_values(by='Home Team Advantage', ascending=False)
+    stats_dataframe_sorted.to_html('/var/www/html/index.html')
 
 GameAnalysis()
