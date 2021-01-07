@@ -27,7 +27,43 @@ def TeamStats(teamname):
 
 def GameAnalysis():
     for matchup in NbaSchedule():
+        homeAdvantage = 0
+        awayAdvantage = 0
         homeTeam = (matchup.split(':')[0]).replace('LA', 'Los Angeles')
         awayTeam = (matchup.split(':')[1]).replace('LA', 'Los Angeles')
-        print(TeamStats(homeTeam))
-        print(TeamStats(awayTeam))
+        homeGamesPlayed = (TeamStats(homeTeam))['games_played'][0]
+        awayGamesPlayed = (TeamStats(awayTeam))['games_played'][0]
+        
+        if ((TeamStats(homeTeam))['assists'][0])/homeGamesPlayed > ((TeamStats(awayTeam))['assists'][0])/awayGamesPlayed:
+            homeAdvantage += 1
+        else: 
+            awayAdvantage += 1
+        if ((TeamStats(homeTeam))['points'][0])/homeGamesPlayed > ((TeamStats(awayTeam))['points'][0])/awayGamesPlayed:
+            homeAdvantage += 1
+        else: 
+            awayAdvantage += 1
+        if ((TeamStats(homeTeam))['field_goal_percentage'][0]) > ((TeamStats(awayTeam))['field_goal_percentage'][0]):
+            homeAdvantage += 1
+        else: 
+            awayAdvantage += 1
+        if ((TeamStats(homeTeam))['turnovers'][0])/homeGamesPlayed < ((TeamStats(awayTeam))['turnovers'][0])/awayGamesPlayed:
+            homeAdvantage += 1
+        else: 
+            awayAdvantage += 1
+        if ((TeamStats(homeTeam))['opp_points'][0])/homeGamesPlayed < ((TeamStats(awayTeam))['opp_points'][0])/awayGamesPlayed:
+            homeAdvantage += 1
+        else: 
+            awayAdvantage += 1
+        if ((TeamStats(homeTeam))['opp_field_goal_percentage'][0]) < ((TeamStats(awayTeam))['opp_field_goal_percentage'][0]):
+            homeAdvantage += 1
+        else: 
+            awayAdvantage += 1
+        if ((TeamStats(homeTeam))['opp_assists'][0])/homeGamesPlayed < ((TeamStats(awayTeam))['opp_assists'][0])/awayGamesPlayed:
+            homeAdvantage += 1
+        else: 
+            awayAdvantage += 1
+        print(homeTeam + ' has a ' + str(homeAdvantage) + ' point advantage over ' + awayTeam)
+        print(awayTeam + ' has a ' + str(awayAdvantage) + ' point advantage over ' + homeTeam)
+       
+
+GameAnalysis()
