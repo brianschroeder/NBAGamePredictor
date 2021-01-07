@@ -7,7 +7,6 @@ import requests
 import json
 import pandas as pd
 from sportsreference.nba.teams import Teams
-from flask import Flask
 
 def NbaSchedule():
     matchups = [] 
