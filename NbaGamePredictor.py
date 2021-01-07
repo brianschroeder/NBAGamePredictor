@@ -8,21 +8,16 @@ import json
 import pandas as pd
 from sportsreference.nba.teams import Teams
 
-def nbaschedule():
-    matchups = {}
-    hometeams = []
-    awayteams = [] 
+def NbaSchedule():
+    matchups = [] 
     request = requests.get('https://cdn.nba.com/static/json/liveData/scoreboard/todaysScoreboard_00.json').text
     request_json = json.loads(request)
     scoreboard = (request_json['scoreboard']['games'])
     for game in scoreboard:
-        hometeams.append(game['homeTeam']['teamCity'] + ' ' + game['homeTeam']['teamName'])
-        awayteams.append(game['awayTeam']['teamCity'] + ' ' + game['awayTeam']['teamName'])
-    matchups.update({'Home Team': hometeams})
-    matchups.update({'Away Team': awayteams})
+        matchups.append(game['homeTeam']['teamCity'] + ' ' + game['homeTeam']['teamName'] + ':' + game['awayTeam']['teamCity'] + ' ' + game['awayTeam']['teamName'])
     return matchups
 
-def teamstats(teamname):
+def TeamStats(teamname):
     teams = Teams()
     for team in teams: 
         df = pd.DataFrame(data=team.dataframe)
@@ -30,5 +25,9 @@ def teamstats(teamname):
         if stats.name[0] == teamname:
             return stats
 
-print(nbaschedule())
-     
+def GameAnalysis():
+    for matchup in NbaSchedule():
+        homeTeam = (matchup.split(':')[0]).replace('LA', 'Los Angeles')
+        awayTeam = (matchup.split(':')[1]).replace('LA', 'Los Angeles')
+        print(TeamStats(homeTeam))
+        print(TeamStats(awayTeam))
