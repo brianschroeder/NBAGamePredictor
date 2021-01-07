@@ -1,6 +1,6 @@
 # Projects Plans for NBA Game Predictor
-# Get All Games for the Day - Done
-# Get Teams Stats for Home and Away Teams and put them in a Table - Done
+# Get All Games for the Day
+# Get Teams Stats for Home and Away Teams and put them in a Table
 # Compare teams FG%,PPG,FG% Defense,Assist,Turnovers
 
 import requests
