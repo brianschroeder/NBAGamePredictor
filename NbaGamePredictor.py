@@ -1,12 +1,13 @@
 # Projects Plans for NBA Game Predictor
-# Get All Games for the Day
-# Get Teams Stats for Home and Away Teams and put them in a Table
+# Get All Games for the Day - Done
+# Get Teams Stats for Home and Away Teams and put them in a Table - Done
 # Compare teams FG%,PPG,FG% Defense,Assist,Turnovers
 
 import requests
 import json
 import pandas as pd
 from sportsreference.nba.teams import Teams
+from flask import Flask
 
 def NbaSchedule():
     matchups = [] 
@@ -26,6 +27,7 @@ def TeamStats(teamname):
             return stats
 
 def GameAnalysis():
+    all_stats = []
     for matchup in NbaSchedule():
         homeAdvantage = 0
         awayAdvantage = 0
@@ -86,7 +88,9 @@ def GameAnalysis():
             'Away Team Advantage': [awayAdvantage]
         }
 
-        statsdf = pd.DataFrame(data = stats)
-        print(statsdf)
-        
+        all_stats.append(stats)
+    
+    stats_dataframe = pd.DataFrame(data = all_stats)
+    stats_dataframe.to_html('/Webserver/NBAGamePredictor/nbagamepredictor.html')
+
 GameAnalysis()
