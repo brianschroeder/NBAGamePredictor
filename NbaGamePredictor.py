@@ -68,29 +68,29 @@ def GameAnalysis():
         #print(awayTeam + ' has a ' + str(awayAdvantage) + ' point advantage over ' + homeTeam)
 
         stats = {
-            'Home Team': [homeTeam],
-            'Home PPG': [((TeamStats(homeTeam))['points'][0])/homeGamesPlayed],
-            'Home Assists P/G' : [((TeamStats(homeTeam))['assists'][0])/homeGamesPlayed],
-            'Home FG%': [((TeamStats(homeTeam))['field_goal_percentage'][0])],
-            'Home Turnovers P/G': [((TeamStats(homeTeam))['turnovers'][0])/homeGamesPlayed], 
-            'Home Allowed PPG': [((TeamStats(homeTeam))['opp_points'][0])/homeGamesPlayed],
-            'Home Allowed FG%': [((TeamStats(homeTeam))['opp_field_goal_percentage'][0])],
-            'Home Allowed Assist P/G': [((TeamStats(homeTeam))['opp_assists'][0])/homeGamesPlayed],
-            'Away Team': [awayTeam],
-            'Away PPG': [((TeamStats(awayTeam))['points'][0])/awayGamesPlayed],
-            'Away Assists P/G' : [((TeamStats(awayTeam))['assists'][0])/awayGamesPlayed],
-            'Away FG%': [((TeamStats(awayTeam))['field_goal_percentage'][0])],
-            'Away Turnovers P/G': [((TeamStats(awayTeam))['turnovers'][0])/awayGamesPlayed], 
-            'Away Allowed PPG': [((TeamStats(awayTeam))['opp_points'][0])/awayGamesPlayed],
-            'Away Allowed FG%': [((TeamStats(awayTeam))['opp_field_goal_percentage'][0])],
-            'Away Allowed Assist P/G': [((TeamStats(awayTeam))['opp_assists'][0])/awayGamesPlayed],
-            'Home Team Advantage': [homeAdvantage],
-            'Away Team Advantage': [awayAdvantage]
+            'Home Team': homeTeam,
+            'Home PPG': ((TeamStats(homeTeam))['points'][0])/homeGamesPlayed,
+            'Home Assists P/G' : ((TeamStats(homeTeam))['assists'][0])/homeGamesPlayed,
+            'Home FG%': ((TeamStats(homeTeam))['field_goal_percentage'][0]),
+            'Home Turnovers P/G': ((TeamStats(homeTeam))['turnovers'][0])/homeGamesPlayed, 
+            'Home Allowed PPG': ((TeamStats(homeTeam))['opp_points'][0])/homeGamesPlayed,
+            'Home Allowed FG%': ((TeamStats(homeTeam))['opp_field_goal_percentage'][0]),
+            'Home Allowed Assist P/G': ((TeamStats(homeTeam))['opp_assists'][0])/homeGamesPlayed,
+            'Away Team': awayTeam,
+            'Away PPG': ((TeamStats(awayTeam))['points'][0])/awayGamesPlayed,
+            'Away Assists P/G' : ((TeamStats(awayTeam))['assists'][0])/awayGamesPlayed,
+            'Away FG%': ((TeamStats(awayTeam))['field_goal_percentage'][0]),
+            'Away Turnovers P/G': ((TeamStats(awayTeam))['turnovers'][0])/awayGamesPlayed, 
+            'Away Allowed PPG': ((TeamStats(awayTeam))['opp_points'][0])/awayGamesPlayed,
+            'Away Allowed FG%': ((TeamStats(awayTeam))['opp_field_goal_percentage'][0]),
+            'Away Allowed Assist P/G': ((TeamStats(awayTeam))['opp_assists'][0])/awayGamesPlayed,
+            'Home Team Advantage': homeAdvantage,
+            'Away Team Advantage': awayAdvantage
         }
 
         all_stats.append(stats)
     
     stats_dataframe = pd.DataFrame(data = all_stats)
-    stats_dataframe.to_html('/Webserver/NBAGamePredictor/nbagamepredictor.html')
+    stats_dataframe.to_html('nbagamepredictor.html')
 
 GameAnalysis()
