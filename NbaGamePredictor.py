@@ -30,8 +30,7 @@ def TeamRatings(teamname):
     RatingURL = 'https://www.basketball-reference.com/leagues/NBA_2021_ratings.html?sr&utm_source=direct&utm_medium=Share&utm_campaign=ShareTool#ratings'
     RatingResponse = requests.get(RatingURL)
     soup = BeautifulSoup(RatingResponse.content, 'html.parser')
-    rating_columns = [  'Team','Conf', 'Div', 'W', 'L', 'W/L%', 'MOV',
-                 'ORtg', 'DRtg', 'NRtg' , 'MOV/A',	'ORtg/A', 'DRtg/A', 'NRtg/A']
+    rating_columns = [  'Team','Conf', 'Div', 'W', 'L', 'W/L%', 'MOV', 'ORtg', 'DRtg', 'NRtg' , 'MOV/A',	'ORtg/A', 'DRtg/A', 'NRtg/A']
     df = pd.DataFrame(columns=rating_columns)
     rating_table = soup.find('table', attrs={'class': 'sortable stats_table', 'id':'ratings'}).tbody
     trs = rating_table.find_all('tr')
