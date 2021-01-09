@@ -7,6 +7,7 @@ import requests
 import json
 import pandas as pd
 from sportsreference.nba.teams import Teams
+from bs4 import BeautifulSoup
 
 def NbaSchedule():
     matchups = [] 
@@ -25,6 +26,23 @@ def TeamStats(teamname):
         if stats.name[0] == teamname:
             return stats
 
+def TeamRatings(teamname):
+    RatingURL = 'https://www.basketball-reference.com/leagues/NBA_2021_ratings.html?sr&utm_source=direct&utm_medium=Share&utm_campaign=ShareTool#ratings'
+    RatingResponse = requests.get(RatingURL)
+    soup = BeautifulSoup(RatingResponse.content, 'html.parser')
+    rating_columns = [  'Team','Conf', 'Div', 'W', 'L', 'W/L%', 'MOV',
+                 'ORtg', 'DRtg', 'NRtg' , 'MOV/A',	'ORtg/A', 'DRtg/A', 'NRtg/A']
+    df = pd.DataFrame(columns=rating_columns)
+    rating_table = soup.find('table', attrs={'class': 'sortable stats_table', 'id':'ratings'}).tbody
+    trs = rating_table.find_all('tr')
+    for tr in trs:
+        tds = tr.find_all('td')
+        row = [td.text.replace('\n', '') for td in tds]
+        df = df.append(pd.Series(row, index=rating_columns), ignore_index=True)
+    team_filtered = (df.query('Team == @teamname'))
+    team_rating = (team_filtered[['Team', 'MOV/A',	'ORtg/A', 'DRtg/A']])
+    return(team_rating)
+
 def GameAnalysis():
     all_stats = []
     for matchup in NbaSchedule():
@@ -34,7 +52,7 @@ def GameAnalysis():
         awayTeam = (matchup.split(':')[1]).replace('LA', 'Los Angeles')
         homeGamesPlayed = (TeamStats(homeTeam))['games_played'][0]
         awayGamesPlayed = (TeamStats(awayTeam))['games_played'][0]
-
+    
         if ((TeamStats(homeTeam))['points'][0])/homeGamesPlayed > ((TeamStats(homeTeam))['opp_points'][0])/homeGamesPlayed:
             homeAdvantage += 4
         
@@ -90,13 +108,21 @@ def GameAnalysis():
             'Away Allowed FG%': ((TeamStats(awayTeam))['opp_field_goal_percentage'][0]),
             'Away Allowed Assist P/G': ((TeamStats(awayTeam))['opp_assists'][0])/awayGamesPlayed,
             'Home Team Advantage': homeAdvantage,
-            'Away Team Advantage': awayAdvantage
+            'Away Team Advantage': awayAdvantage,
+            'Home Team Defensive Rating' : (TeamRatings(homeTeam)['DRtg/A'].to_string()).split('   ')[1],
+            'Away Team Defensive Rating' : (TeamRatings(awayTeam)['DRtg/A'].to_string()).split('   ')[1],
+            'Home Team Ofensive Rating' : (TeamRatings(homeTeam)['ORtg/A'].to_string()).split('   ')[1],
+            'Away Team Ofensive Rating' : (TeamRatings(awayTeam)['ORtg/A'].to_string()).split('   ')[1],
+            'Home Team MOV/A' : (TeamRatings(homeTeam)['MOV/A'].to_string()).split('   ')[1],
+            'Away Team MOV/A' : (TeamRatings(awayTeam)['MOV/A'].to_string()).split('   ')[1]
         }
 
         all_stats.append(stats)
-    
     stats_dataframe = pd.DataFrame(data = all_stats)
     stats_dataframe_sorted = stats_dataframe.sort_values(by='Home Team Advantage', ascending=False)
-    stats_dataframe_sorted.to_html('/var/www/html/index.html')
+    html = stats_dataframe_sorted.to_html(classes='table table-striped table-hover')
+    html_file = open("index.html", "w")
+    html_file.write(html)
+    html_file.close()
 
 GameAnalysis()
