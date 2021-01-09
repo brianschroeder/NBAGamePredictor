@@ -126,9 +126,6 @@ def GameAnalysis():
 
         all_stats.append(stats)
     stats_dataframe = pd.DataFrame(data = all_stats)
-    html = stats_dataframe.to_html(classes='table table-striped table-hover')
-    html_file = open("index.html", "w")
-    html_file.write(html)
-    html_file.close()
-
+    stats_dataframe_sorted = stats_dataframe.sort_values(by='Home Team Advantage', ascending=False)
+    stats_dataframe_sorted.to_html('/var/www/html/index.html')
 GameAnalysis()
